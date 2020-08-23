@@ -7,22 +7,20 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+Howdy!
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+We understand that virtual classes may not have been what you had in mind when you signed up for a course titled *Laboratory and Field Methods in Environmental Science*, but it does provide us with a great oppertunity to really dive into what seperates science from a walk in the woods: writting stuff down! As you've probably already heard, the ENV 316 course will make prodigious use of R and RStudio as we explore concepts of environmental chemistry and ecology. Since you're already using R and RStudio for your data analysis and manipulations, we're encouraging you to submit your work in R Markdown. 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+The aim of this document is to briefly explain what R Markdown is, why you should use it (hint: it'll make everyone's lives easier), and how to create simple documents for this course. 
 
-```{r cars}
-summary(cars)
+## First off, what is R Markdown? 
+
+In a nutshell, R Markdown allows you to analyse your data with R and write your report in the same place (this document writen with R Markdown). This has loads of benefits including increased reproducibility, and streamlined thinking. No more flipping back and forth between code and writing to figure out what's going on.  For example, 
+
+```{r}
+# Look at me go mom
+x <- 2+2
+x
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
