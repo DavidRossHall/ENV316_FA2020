@@ -74,4 +74,42 @@ tinytex::install_tinytex()  # install TinyTeX
 
 The `rmarkdown` package is what we'll use to generate our documents, and the `tinytex` package enables compiling documents as PDFs. There's a lot more going on behind the scenes, but you shouldn't need to worry about it. 
 
-Now that everything is setup, you can create your first RMarkdown document by opening up RStudio, selecting FILE -> NEW FILE -> Rmarkdown. A dialog box will appear asking for some basic input parameters for your Rmarkdown document. Add your title and select PDF as your default output format (you can always change these later if you want). A new file should apear that's already populated with some basic script illustrating the key components of an R markdown document. 
+Now that everything is setup, you can create your first RMarkdown document by opening up RStudio, selecting `FILE -> NEW FILE -> Rmarkdown`. A dialog box will appear asking for some basic input parameters for your Rmarkdown document. Add your title and select PDF as your default output format (you can always change these later if you want). A new file should apear that's already populated with some basic script illustrating the key components of an R markdown document. 
+
+## Great, now what's going on with this R markdown document?
+
+Your first reaction when you opened your newly created R markdown document is probably that it doesn't look anything at all like something you'd show your TA. You're right, what you're seeing is the plain text code which needs to be compiled (called *knit* in RStudio) to create the final document. Let's break down what the R markdown syntax means then let's knit our document. 
+
+The first chunk of any R mardown document will look something like this:
+
+```{r, eval = FALSE}
+---
+title: "Untitled"
+author: "David Hall"
+date: "24/08/2020"
+output: pdf_document
+---
+```
+
+This section is known as the *preamble* and it's where you specify most of the document parameters. In the example we can see that the document title is "Untitled", it's written by your's truly, on the 24th of August, and the default ouput is a PDF document. You can modify the preamble to suit your needs. For example, if you wanted to change the title you would write `title: "New Title"` in the preamble. Note that none of this is `R` code, rather it's `YAML`, the syntex for the document's metadata. Apart from what's shown you shouldn't need to worry about this much, just remember that indentation in YAML matters. 
+
+Reasing further down the default R markdown code, you'll see different blocks of text. In R markdown anything you write will be interpreted as body text (i.e .the stuff you want folks reading) in the knitted document. **To actually run R code** you'll need to do one of the following:
+
+- **Setup a code chunk**. Code chunks start with three backticks like this: ` ```{r}`, where `r` indicates you're using the R languauge. End a code chunk using three more backticks like this ` ``` `.
+
+  - Specify code chunks in the curly braces. i.e. ` ```{r, fig.height = 2}` sets figure height to 2 inches.
+  
+- **Inline code expression**, which starts with ` `r` and ends with ` ``. 
+
+  - Earlier we calculated `x <- 2 + 2`, we can use inline expressions to recall that value (i.e. We found that *x* is `r x`)
+ 
+ A screenshot of how this document, the one you're reading, appeared in RStudio is shown in Figure 2.   
+  
+![How this document, the one you're reading, appeared in RStudio; to see the final results scroll up to Figure 1. Note the "knit" and "run current chunk" ](images/exampleRMarkdown.PNG)
+
+## How do I go from R markdown to something I can hand-in
+
+To knit (or compile) your're R markdown script, simply click the  *knit* button in RStudio (yellow box, Figure 2). You can specifiy what output you would like and RStduio will (hopefully) compile your script. 
+
+If you want to test how your code chunks will run, RStudio shows a little green 'play button' on the top right of every code chunk. Clicking this will run your code chunk and output whatever it would in the final R markdown document. This is a great way to tweak figures and codes as it avoids the need to compile the entire document to check if you managed to change the lines from 'black' to 'blue' in your plot. 
+
