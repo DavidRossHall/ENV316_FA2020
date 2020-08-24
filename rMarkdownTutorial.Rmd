@@ -23,7 +23,7 @@ x <- 2+2
 x
 ```
 
-What we've done here is write a snippet of R code, ran it, and printed the results. 
+What we've done here is write a snippet of R code, ran it, and printed the results. While the above code isn't anything special, we can extend this concept to include any data, figures or plots  
 
 ```{r, echo=FALSE, eval = FALSE}
 # Quickly converts the CHM135 .csv files into tidyverse compatible format. 
@@ -41,10 +41,13 @@ write.csv(airPol, "./data/Toronto_60433_2018_Jan2to8.csv", row.names = FALSE)
 
 ```
 
-```{r, echo=false, message = false, fig.cap= "Time series of O3 and NO\\subscript(2)"}
+```{r, message = FALSE, fig.cap= "Time series of 2018 ambient O~3~ and NO~2~ concentrations (ppb) in downtown Toronto", fig.height=2}
 library(tidyverse) 
+library(knitr)
 airPol <- read_csv("./data/Toronto_60433_2018_Jan2to8.csv",
                    na = "-999")
+kable(airPol[1:5, ], caption = "Example table of airborn pullutant levels used for Figure 1.")
+
 
 ggplot(airPol, aes(date, concentration, colour = pollutant)) +
   geom_line() +
