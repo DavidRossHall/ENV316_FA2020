@@ -23,4 +23,4 @@ x <- 2+2
 x
 ```
 
-
+What we've done there is create a snippet of R code. As you can see this isn't a static block of code, ra
