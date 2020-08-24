@@ -80,7 +80,7 @@ Now that everything is setup, you can create your first RMarkdown document by op
 
 Your first reaction when you opened your newly created R markdown document is probably that it doesn't look anything at all like something you'd show your TA. You're right, what you're seeing is the plain text code which needs to be compiled (called *knit* in RStudio) to create the final document. Let's break down what the R markdown syntax means then let's knit our document. 
 
-The first chunk of any R mardown document will look something like this:
+When you create a R markdown document like this in RStudio a bunch of example code is already written. You can compile this document (see below) to see what it looks like, but lets also create a document from scratch to understand the major components. 
 
 ```{r, eval = FALSE}
 ---
@@ -109,7 +109,7 @@ Reasing further down the default R markdown code, you'll see different blocks of
 
 ## How do I go from R markdown to something I can hand-in
 
-To knit (or compile) your're R markdown script, simply click the  *knit* button in RStudio (yellow box, Figure 2). You can specifiy what output you would like and RStduio will (hopefully) compile your script. 
+To knit (or compile) your're R markdown script, simply click the  *knit* button in RStudio (yellow box, Figure 2). You can specify what output you would like and RStduio will (hopefully) compile your script. 
 
-If you want to test how your code chunks will run, RStudio shows a little green 'play button' on the top right of every code chunk. Clicking this will run your code chunk and output whatever it would in the final R markdown document. This is a great way to tweak figures and codes as it avoids the need to compile the entire document to check if you managed to change the lines from 'black' to 'blue' in your plot. 
+If you want to test how your code chunks will run, RStudio shows a little green 'play button' on the top right of every code chunk. this is the 'run current chunk' button, and clicking it will run your code chunk and output whatever it would in the final R markdown document. This is a great way to tweak figures and codes as it avoids the need to compile the entire document to check if you managed to change the lines from 'black' to 'blue' in your plot. 
 
