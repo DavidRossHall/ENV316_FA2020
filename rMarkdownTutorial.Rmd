@@ -23,4 +23,31 @@ x <- 2+2
 x
 ```
 
-What we've done there is create a snippet of R code. As you can see this isn't a static block of code, ra
+What we've done here is write a snippet of R code, ran it, and printed the results. 
+
+```{r, echo=FALSE, eval = FALSE}
+# Quickly converts the CHM135 .csv files into tidyverse compatible format. 
+# Not to be evaluate for the main document
+library(tidyverse)
+airPol <- read_csv("./data/Toronto_60433_2018_Day2to8.csv")
+
+airPol <- airPol %>%
+  pivot_longer(cols = NO2:O3, names_to = "pollutant", values_to = "concentration") %>%
+  mutate(date = as.POSIXct(as.Date(Date, origin = "1899-12-30"))) %>%
+  select(-Date)
+
+write.csv(airPol, "./data/Toronto_60433_2018_Jan2to8.csv", row.names = FALSE)
+#ggplot(airPol, Date, NO2
+
+```
+
+```{r, echo=false, message = false, fig.cap= "Time series of O3 and NO\\subscript(2)"}
+library(tidyverse) 
+airPol <- read_csv("./data/Toronto_60433_2018_Jan2to8.csv",
+                   na = "-999")
+
+ggplot(airPol, aes(date, concentration, colour = pollutant)) +
+  geom_line() +
+  theme_classic()
+```
+
