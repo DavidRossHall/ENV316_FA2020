@@ -1,0 +1,67 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+
+```{r, eval = FALSE }
+library(webchem) 
+library(rcdk)
+library(kableExtra)
+```
+
+Can't use  `cir_query` because some CASRNs aren't in the *Chemical Identifier Resolver*. 
+
+```{r}
+library(webchem) 
+library(rcdk)
+
+CASRN <- c("73829-36-4",
+           "196859-54-8",
+           "171978-95-3",
+           "862374-87-6",
+           "1763-23-1",
+           "754-91-6")
+
+
+cids <- get_cid(CASRN) # get's the pubchem Compound IDs (cids)
+
+# Get properties listed on pubchem
+x <- pc_prop(cids$cid,
+             properties = c("MolecularFormula", 
+                            "CanonicalSMILES",
+                            "MonoisotopicMass",
+                            "XLogP"))
+# Saving search query results for future analysis 
+write.csv(x, file = "moleculesAndProperties.csv", row.names = FALSE)
+
+y <- subset.data.frame(x, select = c("CanonicalSMILES", "CAS"))
+
+write.table(y, file = "smilesForChemmineR.smi", 
+            row.names = FALSE, 
+            col.names = FALSE, 
+            quote = FALSE,
+            sep = '\t')
+
+ smiset <- read.SMIset("smilesForChemmineR.smi")
+ 
+ sdfset <- smiles2sdf(smiset)
+
+```
+
+```{r}
+
+
+
+```
+
+
+**SDF* stands for *structural-date file*, a chemical file format that describes molecuales and chemcails reactions. [Read up more here](http://www.structuralchemistry.org/pcsb/capp_cdf.php).
