@@ -1,0 +1,64 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+
+```{r, eval = FALSE }
+
+ if (!requireNamespace("BiocManager", quietly=TRUE))
+     install.packages("BiocManager")
+ BiocManager::install("ChemmineR")
+ 
+ library(ChemmineR)
+
+```
+
+```{r}
+
+library(rcdk)
+ cdk.version()
+ 
+ 
+smiles <- c('CCC', 'CCN', 'CCN(C)(C)',
+            'c1ccccc1Cc1ccccc1',
+            'C1CCC1CC(CN(C)(C))CC(=O)CC')
+mols <- parse.smiles(smiles)
+view.image.2d(mols[[1]])
+view.molecule.2d(mols)
+
+
+m <- parse.smiles("C1CCC1CC(CN(C)(C))CC(=O)CC")[[1]]
+dep <- get.depictor(width=300, height=300, style='nob')
+copy.image.to.clipboard(m, dep)
+img <- view.image.2d(m, dep)
+
+plot(c(100, 300), c(100, 300), type = "n", xlab = "", ylab = "")
+rasterImage(img, 100, 100, 300, 300)
+```
+
+
+
+
+```{r, eval=FALSE}
+library(webchem)
+
+x<- as.vector(cir_query("335-67-1", 'smiles'))
+
+library(ChemmineR)
+
+#mol.raw <- smiles2sdf(smiles)
+
+
+
+
+
+
+3plot(mol.raw)
+```
+
+**SDF* stands for *structural-date file*, a chemical file format that describes molecuales and chemcails reactions. [Read up more here](http://www.structuralchemistry.org/pcsb/capp_cdf.php).
