@@ -13,14 +13,15 @@ cids <- get_cid(CASRN) # get's the pubchem Compound IDs (cids)
 
 # Get properties listed on pubchem
 x <- pc_prop(cids$cid,
-             properties = "CanonicalSMILES",
-             )
+             properties = c("MolecularFormula", 
+                            "CanonicalSMILES",
+                            "MonoisotopicMass",
+                            "XLogP"))
 
 x$CAS <- CASRN
 
-smiles <- as.vector(x$CanonicalSMILES)
 
-m <- parse.smiles(smiles)
+m <- parse.smiles(x$CanonicalSmiles[[6]])[[1]]
 dep <- get.depictor(width=300,height = 300,style='nob')
 copy.image.to.clipboard(m,dep)
 img <- view.image.2d(m,dep)
