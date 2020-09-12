@@ -1,7 +1,7 @@
 ---
 title: "CAS and PubChem Chemical Descriptors (Draft)"
-author: "David Hall"
-date: "08/09/2020"
+author: "David Hall and Hui Peng"
+date: "September 18, 2020"
 output: pdf_document
 ---
 
@@ -9,13 +9,34 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Howdy!
+
+In this brief exercise we'll be familiarizing (or introducing) ourselves to the world of cheminformatics. We'll discuss this in more detail as we work through this exercise, but for now it simply means we'll make use of *in silico* (i.e. computers) techniques to tackle problems in environmental chemistry. 
+
+# Objectives
+
+At the start of this exercise you'll be randomly assigned an environementally relevant chemical pollutant. **Note**, you'll be working with your assigned chemical throughout the remaining environmental chemistry section of the course. You'll then compare your unique chemical against a short list of 6 perfluoroalkyl substances (PFAS). 
+
+At the end of the exercise you should have the following:
+
+1. A saved .csv file with the relevant chemical properties of your unique chemical and the short-list of PFAS compounds
+2. A plot that explores the relationship between the chemical properties of your unique chemical and the short-list of PFAS compounds
+3. A brief written analysis where you hypothesis/rationalize the results of your plot. Don't worry to much about being technically correct (boring), we're looking more for curiosity and neat ideas (what the world actually needs). 
+4. All of the above written in an R markdown document and submitted as a PDF (like this one!).
+
+
+# Obtaining your assigned chemicals
+
+Before starting the R section of this lab, please complete the "Chemical Assignement Quiz" on Quercus. It's called a "quiz" because of the way QWuercus works, but really it simply assignes you a random chemical from a list and keeps track of it for us (the isntructors) to reference later on. 
+
+After the quiz you should have an assigned chemical (ex. *aspirin*), it's abbreviated name (ex. *ASA*) and it's CAS number (ex. *50-78-2*). Please keep track of these three values to prevent numerous headaches for all us down the line. 
 
 # Packged needed for this lab
 
-We'll be using the `webchem` and `tidyverse` packages. If you haven't already installed them you can run the following code in the console below or install them using the "Install" button under the "Packages" tab in the bottom right window of RStudio. 
+We'll be using the `webchem` and `tidyverse` packages from the CRAN repository. If you haven't already installed them you can run the following code in the console below or install them using the "Install" button under the "Packages" tab in the bottom right window of RStudio. 
 
 ```{r, eval = FALSE}
-install.packages("tidyverse")
+install.packages("tidyverse") # contains several packages such as dplyr and ggplot2.
 install.packages("webchem")
 
 ```
@@ -24,12 +45,19 @@ After you've installed the packages, load them into your current R session by ru
 
 ```{r, echo = TRUE, message = FALSE }
 library(webchem) 
-library(tidyverse)
+library(tidyverse) 
 ```
 
-# Obtaining your assigned chemicals
+The `tidyverse` is a collection of R packages writen by H. Wickham et al. They work synergisticaly to streamline data analysis in R. `ggplot2` is an example of a tidyverse package, but there's so much more to the tidyverse then that. Read more at [tidyverse.org](https://www.tidyverse.org/) and please look into the *R for Data Science* book by Wickham and Grolemund (2017) to learn more. The book can be found online at [r4ds.had.co.nz/](https://r4ds.had.co.nz/).
 
-# Obtianing pre-calculated chemical descriptors from PubChem
+The `webchem` package was written by E. Szocs et al. and allows the importation of chemical information from a variety of online databases. [Example vignettes](https://cran.r-project.org/web/packages/webchem/vignettes/webchem.html) using `webchem` and the [package  reference manual](https://cran.r-project.org/web/packages/webchem/webchem.pdf) are hosted on CRAN.    
+
+# Importing your data into R
+
+
+
+
+# Obtaining pre-calculated chemical descriptors from PubChem
 
 This needs to be written but I'll probably talk about:
 
@@ -43,7 +71,7 @@ Note: Can't use  `cir_query` because some CASRNs aren't in the *Chemical Identif
 
 ```{r, eval = FALSE}
 # This file is a list of all 24 compounds mentionned across the 4 projects. 
-data <- read.csv('CompoundsList_Env316.csv', header = TRUE, fileEncoding="UTF-8-BOM")
+data <- read.csv('data/CompoundsList_Env316.csv', header = TRUE, fileEncoding="UTF-8-BOM")
 
 CASRN <- as.vector(data$CAS)
 
@@ -64,13 +92,13 @@ x <- pc_prop(cids$cid,
 # Combining everything into one file for subsequent lectures
 dataPubChem <- cbind(data,x)
 write.csv(dataPubChem, 
-          file = "CmpdListPubChem_Env316.csv",
+          file = "data/CmpdListPubChem_Env316.csv",
           row.names = FALSE)
 ```
 
 ```{r, echo = FALSE, message=FALSE}
 
-dataPubChem <- read.csv("CmpdListPubChem_Env316.csv", header = TRUE)
+dataPubChem <- read.csv("data/CmpdListPubChem_Env316.csv", header = TRUE)
 
 knitr::kable(dataPubChem[1:5, 1:6], caption = "The first 6 columns of our compound chemical descriptors data frame.")
 
@@ -85,12 +113,12 @@ Need to expand, but essentially quick hypothesis to test is if polarity increase
 
 
 ```{r, cap = "Plot of molecular weight vs LogP. Note the impact of formal charges on solubility."}
-dataPubChem <- read.csv("CmpdListPubChem_Env316.csv", header = TRUE)
+dataPubChem <- read.csv("data/CmpdListPubChem_Env316.csv", header = TRUE)
 
 
 ggplot(dataPubChem, aes(x = MolecularWeight, 
                         y = XLogP, 
-                        colour = factor(Project),
+                        colour = Project,
                         shape = factor(Charge))) +
   geom_point() +
   theme_classic()
