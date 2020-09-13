@@ -1,17 +1,24 @@
 ---
-title: "CAS and PubChem Chemical Descriptors (Draft)"
+title: "Handout: CAS and PubChem Chemical Descriptors (Draft)"
 author: "David Hall and Hui Peng"
 date: "September 18, 2020"
-output: pdf_document
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 2
+header-includes:
+ \usepackage{float}
+ \floatplacement{figure}{H}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+***************
 
 Howdy!
 
-In this brief exercise we'll be familiarizing (or introducing) ourselves to the world of cheminformatics. We'll discuss this in more detail as we work through this exercise, but for now it simply means we'll make use of *in silico* (i.e. computers) techniques to tackle problems in environmental chemistry. 
+In this exercise we'll be familiarizing (or introducing) ourselves to the world of cheminformatics. We'll discuss this in more detail as we work through this exercise, but for now it simply means we'll make use of *in silico* (i.e. computers) techniques to tackle problems in environmental chemistry. 
 
 # Objectives
 
@@ -19,19 +26,19 @@ At the start of this exercise you'll be randomly assigned an environementally re
 
 At the end of the exercise you should have the following:
 
-1. A saved .csv file with the relevant chemical properties of your unique chemical and the short-list of PFAS compounds
-2. A plot that explores the relationship between the chemical properties of your unique chemical and the short-list of PFAS compounds
+1. A saved .csv file with the relevant molecular descriptors of your unique chemical and the short-list of PFAS compounds
+2. A plot that explores the relationship between the molecular descriptors of your unique chemical and the short-list of PFAS compounds
 3. A brief written analysis where you hypothesis/rationalize the results of your plot. Don't worry to much about being technically correct (boring), we're looking more for curiosity and neat ideas (what the world actually needs). 
 4. All of the above written in an R markdown document and submitted as a PDF (like this one!).
 
 
 # Obtaining your assigned chemicals
 
-Before starting the R section of this lab, please complete the "Chemical Assignement Quiz" on Quercus. It's called a "quiz" because of the way QWuercus works, but really it simply assignes you a random chemical from a list and keeps track of it for us (the isntructors) to reference later on. 
+Before starting the R section of this lab, please complete the "Chemical Assignement Quiz" on Quercus. It's called a "quiz" because of the way Quercus works, but really it simply assignes you a random chemical from a list and keeps track of it for us (the isntructors) to reference later on. 
 
-After the quiz you should have an assigned chemical (ex. *aspirin*), it's abbreviated name (ex. *ASA*) and it's CAS number (ex. *50-78-2*). Please keep track of these three values to prevent numerous headaches for all us down the line. 
+After the quiz you should have an assigned chemical (ex. *perfluorooctanoic acid*), it's abbreviated name (ex. *PFOA*) and it's CAS number (ex. *335-67-1*). Please keep track of your assigned values to prevent numerous headaches for all us down the line. 
 
-# Packged needed for this lab
+# Packages needed for this lab
 
 We'll be using the `webchem` and `tidyverse` packages from the CRAN repository. If you haven't already installed them you can run the following code in the console below or install them using the "Install" button under the "Packages" tab in the bottom right window of RStudio. 
 
@@ -54,31 +61,67 @@ The `webchem` package was written by E. Szocs et al. and allows the importation 
 
 # Importing your data into R
 
+All of the data we'll be using for this exercise can be found freely on [PubChem](https://pubchem.ncbi.nlm.nih.gov/), an open chemistry database focusing on small molecules, their chemical structures, identifiers, toxicity data and more. You can go to [pubchem.ncbi.nlm.nih.gov](https://pubchem.ncbi.nlm.nih.gov/) and search up your assigned chemical/CAS and be inundated with information. This approach is great to look up one or two compounds, but building up a dataset this way not only becomes tedious, but unreliable. Some of the work in the Peng group investigates over 80 000 unique chemicals in consumer products; obviously a manually intensive approach is impossible. 
 
+So to that end, we'll import a data set of compounds, add our/your unique chemical to it, then use the `webchem` package from R to build up our dataset. Let's start by constructing our `data.frame`, before we expand it using `webchem`. 
 
+```{r}
 
-# Obtaining pre-calculated chemical descriptors from PubChem
+# Importing example dataset, found on Quercus
 
-This needs to be written but I'll probably talk about:
+df <- read.csv("data/ExamplePFAS.csv", header = TRUE)
 
-- What are CAS numbers
-- What is PubChem & pubchem CIDs
-- Point by Point description of each molecular desciptor
+df
+```
 
-**Depending on the how we assign their chemicals, I was planning on having them construct a data.frame from scratch and build it up column by column.** What I did below was done on a list of all 24 chemicals, and we can use it for later reference. 
+So we see we have a `data.frame` consisting of four columns, and six example chemicals. Let's move on and add our unique chemical to it. 
 
-Note: Can't use  `cir_query` because some CASRNs aren't in the *Chemical Identifier Resolver*, the data base used by the code you sent me earlier. 
+**Top Tip**: As shown above, we've returned our `data.frame` to the console. In R studio you can also view `data.frames`, `matrices`, and `lists` from the "Environment" tab in the upper right corner or with the command: `View(yourDatasNameHere)`. A new tab will appear in R studio with your data. You can also "tear" the tab away (click and drag) to get a new window. Now you can view the data you're trying to manipulate while you code. This is a lot easier to work with then scrolling back up through the console window. 
+
+**Note** that throughout the remainder of this handout *perfluorooctanoic acid (PFOA, CAS 335-67-1) is used as a placeholder for your assigned compound*. You can copy the code into your R studio session and replace values accordingly. 
+
+```{r}
+
+# We'll use the tidyverse with add_row rather than the base R style.
+# Note how we're reassigning our newly created dataset to our original data frame. 
+
+df <- df %>% add_row(Project = "David", 
+                     Name = "Perfluorooctanoic acid",
+                     Abbreviation = "PFOA", 
+                     CAS = "335-67-1")
+
+df
+```
+
+Great, we can see our returned `data.frame` and everything looks to be in place. *Make sure your `data.frame is properly setup*. 
+
+**Top Tip**: We made use of the pipe operator, `%>%`, a powerful tool for clearly expressing a sequence of multiple operations. The way you would read the code above is "We're adding a row to `df` and reassigning the newly craeted data.frame to the variable `df`". Take note of the pipe, but don't worry about how it works for now, we'll discuss it later on. Inquiring minds can read more about the pipe in [Chapter 18 of *R for Data Science*](https://r4ds.had.co.nz/pipes.html)
+
+## What's in our dataset anyways?
+
+Whenever working with chemical data, it's always a good idea to look at the actual molecular structures in question. The structure of the seven compounds in the example dataset are shown in Figure 1. 
+
+![Chemical strucuture of the seven PFAS compounds in the example dataset. Note the differences in chain length (the number of -CF~2~- bonds), and the headgroups ( i.e. -COOH vs. -SO~3~H).](images/PFASstructures.png)
+
+These seven compounds belong to a class of persistent organic pollutants known as *per-* and *polyfluoroalkyl substances* (PFAS). Their classification, and unique properties, derive from the extremely hydrophobic carbon-fluorine bonds (-CF~2~ & -CF~3~). Hydrophobic means "water hating" or repelling; think oil on water. For example, the non-stick properties of Teflon derive from the hydrophobicity of its carbon-fluorine bonds. However, the compounds in Figure 1 also have *hydrophilic* (water loving) head-groups. These act to counter balance the hydrophobic -CF~x~ "tail" and improves the overall solubility (ability to dissolve in water) of the molecule. We'll talk more about solubility later on. 
+
+# Obtaining molecular descriptors from PubChem
+
+It might not be apparent to you, but there is a wealth of information in the chemical structures of compounds. However, transforming this into a useful data for computational analysis requires the use of molecular desctipors. "[M]olecular descriptor [are] the final result of a logic and mathematical procedure which transforms chemical information encoded within a symbolic representation of a molecule into a useful number or the result of some standardized experiment."^[Roberto Todeschini and Viviana Consonni, *Handbook of Molecular Descriptors*, Wiley-VCH, 2000. http://www.moleculardescriptors.eu/books/handbook.htm] 
+
+So let's fetch ourselves some relevant molecular descriptors from PubChem using `webchem`. We can also calculate these, and many more desciptors, using `R` and cheminformatics packages such as `rcdk` or `chemminer`. Unfortunately, these calculations are pretty computationally demanding, so we'll settle for what we can get from PubChem. 
 
 ```{r, eval = FALSE}
-# This file is a list of all 24 compounds mentionned across the 4 projects. 
-data <- read.csv('data/CompoundsList_Env316.csv', header = TRUE, fileEncoding="UTF-8-BOM")
+# Extracting CAS numbers from our data.frame
 
-CASRN <- as.vector(data$CAS)
+CAS <- as.vector(df$CAS)
 
-cids <- get_cid(CASRN) # get's the pubchem Compound IDs (cids)
+# Getting the PubChem ID from CAS numbers
+# You need an internet connection; may take a minute
+cids <- get_cid(CAS) 
 
-# Get properties listed on pubchem 
-x <- pc_prop(cids$cid,
+# Getting descriptors from PubChem; there's ~30 so we'll specify what we need 
+Descriptors <- pc_prop(cids$cid,
              properties = c("MolecularFormula",
                             "MolecularWeight",
                             "CanonicalSMILES",
@@ -90,39 +133,72 @@ x <- pc_prop(cids$cid,
                             "Volume3D"))
 
 # Combining everything into one file for subsequent lectures
-dataPubChem <- cbind(data,x)
+dataPubChem <- cbind(df,Descriptors)
+
+# Saving data so we don't need to recall values from PubChem
 write.csv(dataPubChem, 
-          file = "data/CmpdListPubChem_Env316.csv",
+          file = "data/DavidExamplePubChem.csv",
           row.names = FALSE)
 ```
 
 ```{r, echo = FALSE, message=FALSE}
-
-dataPubChem <- read.csv("data/CmpdListPubChem_Env316.csv", header = TRUE)
-
-knitr::kable(dataPubChem[1:5, 1:6], caption = "The first 6 columns of our compound chemical descriptors data frame.")
-
-
+dataPubChem <- read.csv("data/DavidExamplePubChem.csv", header = TRUE)
 ```
 
-The calculated values scrapped from PubChem are: ``r colnames(dataPubChem)[4:ncol(dataPubChem)]``. 
+If you successfully ran the code above, you should now have a `data.frame` with 9 additional columns named: ``r colnames(dataPubChem)[4:ncol(dataPubChem)]``. And you should have a saved your `data.frame` into a .csv file. Everytime you run the `pc_prop` function, you ping the PubChem database, which takes some time. Saving our results means avoids this the next time we pick up our work. 
+
+Some of the descriptors we added to our `data.frame` are self-descriptive, and others we'll touch upon later on. For now let's look at a couple:
+
+- *MolecularWeight*: this is the formula weight of a given chemical in *g/mol*. This is the same weight you used in *CHM 135* or *CHM 136*
+- *Charge*: The formal charge of the chemical; `0` is neutral. 
+- *IUPACName*: this is the "official" chemical name, based on rules like you encountered in intro chem classes. What a mouthful. 
+- *XLogP*: The octonal/water partition coefficient, a measure of how "hydrophilic" or "hydrophobic" a compound is. **The higher the *LogP* value, the greater the hydrophobicity.** 
+  - *XLogP* is computational calculated by PubChem using the *XLogP3* method.^[Cheng, et al. *J. Chem. Inf. Model*, **2007**, *47*(6):2140-8. doi: 10.1021/ci700257y.] 
+  - *LogP* is calculated experimentally by measuring the concentration of a solute in an immiscible mixture of octanol and water; the actual formula is:  $LogP = log(\frac{[solute]_{octanol} }{[solute]_{water}})$
+- *CanonicalSMILES*: SMILES stands for *simplified molecular-input line-entry system*; essentially it's a way to describe the structure of a chemical in a string. The *XlogP3* method mentioned above starts with SMILES data to calculte LogP.  
+
+# Viewing the molecular structure of your compound
+
+Unfortunately it's rather cumbersome to translate SMILES information into visual structures using R. However, you can view the structure of your compound from it's SMILES using any number of online ressources. For example, using the [PubChem Sketcher](https://pubchem.ncbi.nlm.nih.gov/edit3/index.html) and the PFOA SMILES, we get the following image: 
+
+![Structure of PFOA draw from SMILES using PubChem Sketcher V2.4](images/PFOA_PubChemSketcher.png)
+
+While we're only using SMILES information to draw the structure, so much more can be done with it. We can calculate hundreds of molecular descriptors, analyze trends in massive data bases of chemical compounds, and make numerous prediction using a variety of models. If you continue to pursue anything related to chemistry, you're bound to come across SMILES notation at some point. 
 
 # Quick data exploration of our compounds
 
-Need to expand, but essentially quick hypothesis to test is if polarity increases with molecular weight.  The theory being that larger molecules are more complex, and hence have a lower chance of cancelling out dipole moments. We'll use XLogP as a stand-in for polatiry and molecular weight as a standing for complexity. The higher the XLogP the more polar, the higher the molecular weight the greater the chemical complexity. **I know this needs a bit more justfication, but i'm just trying to show them how to make plots**. 
+If you haven't noticed already, each column corresponds to a variable, and each row is an observation. When data is organized like this in R, it's called *tidy* data (hence *tidyverse*). Let's explore our data through graphical visualization using `ggplot2`, a tidyverse package. 
+
+`ggplot2` can plot both discrete variables (i.e. categeries, ex: Male or Female) or continuous variables (i.e. numbers, ex: weight). Were limited in our dataset to the descriptors we've called, so **let's focus on plotting molecular weight vs. solubility** because it's the most interesting. 
 
 
-```{r, cap = "Plot of molecular weight vs LogP. Note the impact of formal charges on solubility."}
-dataPubChem <- read.csv("data/CmpdListPubChem_Env316.csv", header = TRUE)
+```{r, fig.cap = "Plot of molecular weight vs LogP."}
+library(ggrepel) # improves point annotation from baseline ggplot
 
-
-ggplot(dataPubChem, aes(x = MolecularWeight, 
-                        y = XLogP, 
-                        colour = Project,
-                        shape = factor(Charge))) +
-  geom_point() +
-  theme_classic()
-
+ggplot(data = dataPubChem,      # specifcying the data frame we created earlier
+       aes(x = MolecularWeight, # note how each value here is a column name
+           y = XLogP,
+           colour = Project,
+           label = Abbreviation)) +
+  geom_point() +      # specifying we want to create a scatter plot
+  geom_label_repel()  # creates the labels for each point using the ggrepel package
 ```
 
-From the plot in Figure 1, it appears their is a positive correlation between MW and LogP. You can see the impact of formal charges on LogP in the top right. 
+## What does our MW vs. LogP plot tell us? 
+
+The entire point of visualizing information is to help observe trends and patterns we might not otherwise see. With that in mind, look again at Figure 3 or your own plot and start jotting down some observation. Some observations include:
+
+- There is a positive correlation between molecular weight and LogP among the compounds we plotted. We can easily see that PFTeDA is less soluble in water (higher LogP) than PFDS. 
+- PFHpS is between PFOA and PFNA in terms of molecular weight, but has a lower LogP, almost equal to PFHpA.
+- PFOA weights halfway between PFHpA and PFNA, and it's LogP is also half-way between PFHpA and PFNA. 
+
+Question your observations and ask yourself if they make sense. Does it make sense that PFTeDA is less soluble than PFNA? When you create your own plot with you assigned chemical, ask yourself if it fits this trend. If not, why not? Don't dig too deep into the chemical theory, just remember to look at the structures (Figure 1, and the one you made from your SMILES). Also look at the other descriptors in your dataset, such as the formal charge, to explain some of the trends.  
+
+## Implications of plotting with ggplot2
+
+The "gg" in `ggplot2` stands for "grammar of graphics". The theory being that all plots from the same few components: data, aesthetics, coordinates, and geoms. In the code used to generate Figure 3, our data is the `dataPubChem` data frame we made earlier. The aesthetics were passes through `aes(...)`, with the *x* and *y* values creating our coordinate system. The other two aesthetics elements, *colour* and *label*, were passed to `geom_point` and `geom_label`, respectively. Recall that all of the aes elements correspond to a column name. Because our data is tidy, we can easily incorporate more dimensions to our plot. For example if we added `size = Volume3D` to the `aes(...)` elements, the size of a indivual points would vary with that chemicals Volume3D value. 
+
+Every plot you generate with `ggplot2` will have a similar structure. There are a plethora of options when creating plots with `ggplot2`. Consult the [official R studio ggplot2 cheat sheet](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf) to get some more ideas of how you can modify your graphs to better communicate information. 
+
+
+
