@@ -169,11 +169,33 @@ fig.cap | NA | include figure caption, must be in quotation makrs ("")
 
 Images not produced by R code can easiyl be inserted into your document. Between paragraphs insert the following code. Note that compiling to PDF, the LaTeX call will place your image in the "optimal" location, so you might find your image isn't exactly where you though it would be. A quick google search can help you out if this is problem. 
 
-```{r, eval = FALSE}
-![Caption for the picture.](/path/to/image.png){width=50%}
-````
+```markdown
+![Caption for the picture.](/path/to/image.png){width=50%, height=50%}
+```
 
-Note that in the above the use of image atributes, the `{width=50%}` at the end. This is how you'll adjust the size of your image. Other dimensions you can use include `px, cm, mm, in, inch`, and `%`. 
+Note that in the above the use of image atributes, the `{width=50%, height=50%}` at the end. This is how you'll adjust the size of your image. Other dimensions you can use include `px, cm, mm, in, inch`, and `%`. 
+
+## Generating Tables
+
+There's multiple methods to creat tables in R markdown. Assuming you want to display results calculted through R code, you can use the `kable()` function. Please consult [Chapter 10](https://bookdown.org/yihui/rmarkdown-cookbook/kable.html) of the *R Markdown Cookbook* for additional support. 
+
+Alternatively, if you want to create simple tables manually using the following code in the main body ( you can obviously increase the number of rows/columns and the location of the horizontal lines.) To generate more complex tables, see the `kable()` function and the `kableExtra` package. 
+
+```markdown
+Header 1 | Header 2| Header 3
+---------|---------|---------|
+Row 1    | Data    | Some other Data
+Row 2    | Data    | Some other Data
+---------|---------|---------|
+```
+Header 1 | Header 2| Header 3
+---------|---------|---------|
+Row 1    | Data    | Some other Data
+Row 2    | Data    | Some other Data
+
+## Spellcheck in R Markdown 
+
+While writtin an R markdown document in R studio, go to the `Edit` tab at the top of the window and select `Check Spelling`. You can also use the `F7` key as a shortcut. The spell checker will literally go through every word it thinks you've misspelled in your document. You can add words to it so your spell checker grows with your use. **Note** that the spell check with also check your R code; be wary of changing misspelt word in your code because you may get an error down the line. 
 
 ## Quick reference on R markdown syntax
 
