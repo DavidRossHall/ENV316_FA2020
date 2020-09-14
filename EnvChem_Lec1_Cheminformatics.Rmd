@@ -171,7 +171,7 @@ The [*Chemical Polarity* Wikipedia page](https://en.wikipedia.org/wiki/Chemical_
 
 ## What does LogP mean?
 
-LogP is the octanol/water partition coefficient. It's the ratio of a compound in the mixture octanol (non-polar) and water (polar). These two solvents are immiscible, and form two distinct layer; think oil on water. It's essentially a measure of how hydrophilic a compound is; **the higher the LogP, the lower it's solubility in water**. Figure 4 shows a simplification of this process.
+LogP is the octanol/water partition coefficient. It's the ratio of a compound in the mixture octanol (non-polar) and water (polar). These two solvents are immiscible, and form two distinct layer; think oil on water. It's essentially a measure of how hydrophilic a compound is; **the higher the LogP, the lower it's solubility in water**. Figure 4 shows a simplification of this process. Thankfully, LogP can readily be calculated/predicted using computational meethods, subverting the needs for empirical measurements. 
 
 ![Simplification of octonal/water parititon coefficient.](images/LogP.png){width=75%}
 
