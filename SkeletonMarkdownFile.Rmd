@@ -1,0 +1,59 @@
+---
+title: "Your Title Here"
+author: "Your Name Here"
+date: "Due date here"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Note** this document provided a skeleton to which you'll need to add your own code and values. Please delete this text, and all instructions, from your final submission. 
+
+
+## Assigned Chemical
+
+A quick blurb about your assigned chemical including  it's name and CAS number <####>. 
+
+## Importing and creating data set.
+
+If for some reason `webchem` is interfering with the compiling process, set `eval = FALSE`, and run the code in the chunk and save your CSV.. We just want to see how you created and saved your .csv file. 
+
+```{r}
+# you may need to install these
+# library(tidyverse)
+# library(webchem) 
+# 
+# data <- read.csv(...)
+# 
+#  add your assigned chemical values to data
+#  get PubChem CID
+#  using PubChemCID get molecular desciptors from PubCHem
+#  Merge the two data.frames and save as .csv
+# 
+# write.csv(combinedData, file = ...)
+```
+
+## Viewing chemical structure of my assigned compound
+
+*Generate an image using PubChem Sketcher or similar software and insert it here*. See *R Markdown Tutorial* or Google for instructions on inserting images. 
+
+## Plot of molecular weight vs. LogP
+
+See accompanying handout for an example plot with code. 
+
+```{r}
+# Call your newly created .csv
+
+# ggplot(data = YourDataFrame, 
+#        x = MolecularWeight,
+#        y = XlogP,
+#        ...) + # anything else you'd like to add
+# geom_point()
+
+```
+
+## Discussion of MW vs. LogP Plot
+
+Talk about any trends you seen between the Tutorial compound, and if your compound follows or deviates from these. Try and rationalize why this might be the case (refer to the chemical structures). 
